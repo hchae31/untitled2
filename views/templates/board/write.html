@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>세미프로잭트</title>
+    <link rel="stylesheet" href="/static/css/project.css">
+    <style>
+        form {  width: 450px;
+            margin: 50px auto; }
+        th { width: 150px; }
+        tr { height: 35px }
+        tr:nth-child(3) { vertical-align: top }
+        #listbtn { margin-left: 95px }
+        input, textarea { padding: 5px }
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <header><h1>세미프로잭트 v1</h1></header>
+        <nav><ul>
+            <li><a href="/"Home></a></li>
+            <li><a href="/member/join">회원가입</a></li>
+            <li><a href="/member/login">로그인</a></li>
+            <li><a href="/board/list">게시판</a></li>
+            <li><a href="/member/myinfo">회원정보</a></li>
+        </ul>
+            <hr>
+        </nav>
+        <main>
+            <h2>글쓰기</h2>
+            <form name="writefrm" method="post">
+            <table cellpadding="5">
+                <tr><th>제목</th><td><input type="text" name="title" id="title" required></td></tr>
+                <tr><th>작성자</th>><td><input type="text" name="title" id="userid" value="zzyzz" readonly></td></tr>
+                <tr><th>본문</th><td><textarea name="contents" id="contents" rows="10" cols="45" required></textarea></td>
+                <tr><td><td colspan="2">
+                    <button type="button" id="listbtn" onclick="location.href='/board/list'">리스트로</button>
+                    <button type="submit" id="writeokbtn">입력완료</button>
+                </td></tr>
+            </table>
+            </form>
+        </main>
+        <footer>
+            <hr>
+            <p>copyright &copy; 2024. hchae31. all rights reserved</p>
+        </footer>
+    </div>
+</body>
+</html>
