@@ -6,7 +6,7 @@
 
 {% block style %}
 <style>
-    table { width: 685px; margin: 10px auto;
+    table { width: 850px; margin: 10px auto;
         border-collapse: collapse; table-layout: fixed }
     th, td { border: 1px solid black; padding: 5px 8px;
         text-align: center; height: 30px }
@@ -45,7 +45,10 @@
         </select>
             <input type="text" name="search" id="search">
             <button type="button" id="findbtn">검색하기</button></td>
-            <td colspan="2"><button type="button" id="writebtn" onclick="location.href='/board/write'">글쓰기</button></td></tr>
+            <td colspan="2">
+                {%if 'logined_uid' in request.session %}
+                <button type="button" id="writebtn">글쓰기</button></td></tr>
+                {% endif %}
         <tr><th>번호</th><th>제목</th><th>작성자</th>
             <th>작성일</th><th>조회</th></tr>
         </thead>
@@ -70,15 +73,23 @@
             {% endif %}
 
             {% for idx in range(stpgb, stpgb+10) %}
-                    {% if cpg != idx %}
-                    <li><a href="/board/list/{{ idx }}">{{ idx }}</a></li>
-                    {% else %}
-                    <li class="cpg">{{ idx }}</li>
-                    {% endif %}
+                {% if cpg != idx %}
+                <li><a href="/board/list/{{ idx }}">{{ idx }}</a></li>
+                {% else %}
+                <li class="cpg">{{ idx }}</li>
+                {% endif %}
             {% endfor %}
-
-            <li><a href="/board/list/{{ cpg + 1}}">다음</a></li></ul>
+            <li><a href="/board/list/{{ cpg + 1 }}">다음</a></li></ul>
     </div>
-
 </main>
+{% endblock %}
+
+{% block script%}
+<script>
+    let writebtn = document.querySelector('#writebtn');
+
+    writebtn.addEventListener('click', () => {
+       location.href = '/board/write';
+    });
+</script>
 {% endblock %}
