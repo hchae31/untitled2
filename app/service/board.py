@@ -66,14 +66,17 @@ class BoardService:
             # result = db.execute(stmt).scalars().first()
 
             #본문글 + 댓글 읽어오기
-            stmt = select(Board).join(Board.replys)\
+            # outerjoin : outer join
+            # contains_eager : 관계 맺은 하위 객체의 내용을 즉시 로딩
+            stmt = select(Board).outerjoin(Board.replys)\
                 .options(contains_eager(Board.replys)) \
                 .where(Board.bno == bno)\
                 .order_by(Reply.rpno)
-            result = db.execute(stmt).scalars().first()
+
+            result = db.execute(stmt)
 
             db.commit()
-            return result
+            return result.scalars().first()
 
         except SQLAlchemyError as ex:
             print(f'▶▶▶ select_board 오류발생 : {str(ex)}')
