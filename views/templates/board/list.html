@@ -18,7 +18,7 @@
     select, input{ padding: 5px }
     button { padding: 3.5px 5px }
 
-    .pagnation { width: 600px; margin: 0 auto }
+    .pagnation { width: 685px; margin: 0 auto }
     div > ul { list-style: none; padding: 0; }
     div > ul li { display: inline; padding: 0 15px; }
     .cpg { color: red; font-size: 30px; font-weight: bold }
@@ -46,12 +46,13 @@
             <input type="text" name="search" id="search">
             <button type="button" id="findbtn">검색하기</button></td>
             <td colspan="2">
-                {%if 'logined_uid' in request.session %}
-                <button type="button" id="writebtn">글쓰기</button></td></tr>
+                {% if 'logined_uid' in request.session %}
+                <button type="button" id="writebtn">글쓰기</button>
                 {% endif %}
-        <tr><th>번호</th><th>제목</th><th>작성자</th>
-            <th>작성일</th><th>조회</th></tr>
+            </td></tr>
+        <tr><th>번호</th><th>제목</th><th>작성자</th><th>작성일</th><th>조회</th></tr>
         </thead>
+
         <tbody>
             {% for bd in bdlist %}
             <tr>
@@ -64,32 +65,64 @@
             {% endfor %}
         </tbody>
     </table>
+
     <div class="pagnation">
         <ul>
             {% if cpg > 1 %}
-            <li><a href="/board/list/{{ cpg - 1 }}">이전</a></li>
-            {% else %}
-            <li>이전</li>
+                <li><a href="/board/list/{{ cpg - 1 }}">이전</a></li>
+                {% else %}
+                <li>이전</li>
             {% endif %}
 
             {% for idx in range(stpgb, stpgb+10) %}
+            {% if idx <= allpage %} {# idx가 allpage보다 같거나 작으면 페이지네이션 출력 #}
                 {% if cpg != idx %}
                 <li><a href="/board/list/{{ idx }}">{{ idx }}</a></li>
                 {% else %}
                 <li class="cpg">{{ idx }}</li>
                 {% endif %}
+            {% endif %}
             {% endfor %}
-            <li><a href="/board/list/{{ cpg + 1 }}">다음</a></li></ul>
+
+            {% if cpg < allpage %}  {# 현재페이지가 allpage보다 같거나 작으면 링크가 있는 "다음" 출력 #}
+            <li><a href="/board/list/{{ cpg + 1 }}">다음</a></li>
+            {% else %}
+            <li>다음</li>
+            {% endif %}
+        </ul>
     </div>
 </main>
 {% endblock %}
 
-{% block script%}
+
+{% block script %}
 <script>
     let writebtn = document.querySelector('#writebtn');
+    let findbtn = document.querySelector('#findbtn');
 
-    writebtn.addEventListener('click', () => {
-       location.href = '/board/write';
+    //optional chaining : 특정 객체의 속성에 접근할때
+    //해당객체가 null이거나 undefined 일 경우, 보통 에러가 발생됨
+    //이럴 경우, 옵셔널 체이닝을 이용하면 에러를 발생시키지 않음
+    //사용법: 객채명?.속성명
+    writebtn?.addEventListener('click', () => {
+        location.href = '/board/write';
     });
-</script>
+
+    findbtn.addEventListener('click', () => {
+        let ftype = document.querySelector('#findtype').value;
+        let fkey = document.querySelector('#search').value;
+
+        if (fkey === '') {
+            alert('검색 내용을 작성하세요');
+            return;
+        }
+
+        // 검색시 사용할 api : /board/list/검색종류/검색내용/1
+        let params = `/${ftype}/${fkey}/1`;
+        let findurl = '/board/list' + params;
+
+
+        location.href = findurl;
+        });
+    </script>
 {% endblock %}
