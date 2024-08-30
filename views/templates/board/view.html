@@ -24,7 +24,7 @@
 <main>
     <h2>게시판 본문보기</h2>
     <table>
-        <tr><th>제목</th><td>{{ boards.titkle }}</td></tr>
+        <tr><th>제목</th><td>{{ boards.titkle }}안녕하세여</td></tr>
         <tr><th>작성자</th><td>{{ boards.userid }}zzyzzy</td></tr>
         <tr><th>작성일</th><td>{{ boards.regdate }} ({{ boards.views }})2024-07-30 14:15:25</td></tr>
         <tr><th>본문</th><td>{{ boards.contents }}시간은 금이라구, 친구! 시간은 금이라구, 친구! 시간은 금이라구, 친구! 시간은 금이라구, 친구! 시간은 금이라구, 친구! 시간은 금이라구, 친구! 시간은 금이라구, 친구! 시간은 금이라구, 친구! 시간은 금이라구, 친구! 시간은 금이라구, 친구! 시간은 금이라구, 친구!
@@ -45,7 +45,8 @@
         {% if rp.rno == rp.rno %}
             <tr><td><h4>{{ rp.userid }}</h4></td>
                 <td><div class="cmtbg">{{ rp.regdate }}
-                    <span class="pushend"><a href="#">[추가]</a></span></div>
+                    <span class="pushend">
+                        <a href="javascript:addReply('{{ rp.rno }}')">[추가]</a></span></div>
                     <p>{{ rp.reply }}</p></td></tr>
         {% else %}
             <tr><td></td>
@@ -63,13 +64,33 @@
                 <div class="col-auto"><label class="ms-3 pushbtm" for="reply">작성자</label></div>
                 <div class="col-8"><textarea class="form-control" name="reply" id="reply" rows="5" required></textarea></div>
                 <div class="col-auto"><button class="btn btn-dark pushbtm" type="submit" id="newbrbtn">
-                    <i class="bi bi-chat-dots"></i> 댓글쓰기</button></div>
+                    <i class="bi bi-chat-dots"></i>댓글쓰기</button>
+                </div>
             </div>
             <input type="hidden" name="userid" value="abc123">
             <input type="hidden" name="bno" value="{{ boards.bno }}">
-
         </form>
     </div><!-- 댓글쓰기 -->
+
+    <!-- 대댓글 작성을 위한 모달대화상자 -->
+    <div class="modal hide" id="replyModal" role="dialog">
+        <div class="modal-dialog" role="document">
+            <form name="rpfrm" id="rpfrm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title"><i class="bi bi-chat-text-fill"></i> 대댓글 쓰기</h4></div>
+                    <div class="modal-body">
+                    <textarea name="reply" id="rreply" rows="8" cols="60"
+                              class="form-control" required></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" id="newrrpbtn"
+                                class="btn btn-warning">대댓글 작성</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 
 
 </main>
@@ -99,5 +120,13 @@
             if (res.redirected) location.href = res.url;
         }); // fetch
     });
+
+    let addReply = (rno) => {
+        let rpno = document.querySelector('#rpno')
+        let replyModal = document.querySelector('#replyModal')
+
+        let myModal = new bootstrap.Modal(replyModal);
+        myModal.show();
+    };
 </script>
 {% endblock %}
