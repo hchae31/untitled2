@@ -1,7 +1,6 @@
 from sqlalchemy import select, or_, update, insert, func
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import joinedload, contains_eager
-
 from app.model.board import Board, Reply
 
 
@@ -15,7 +14,6 @@ class BoardService:
                 .order_by(Board.bno.desc()) \
                 .offset(stbno).limit(25)
             result = db.execute(stmt)
-
             return result
 
         except SQLAlchemyError as ex:
@@ -100,4 +98,18 @@ class BoardService:
 
         except SQLAlchemyError as ex:
             print(f'▶▶▶ insert_reply 오류발생 : {str(ex)}')
+            db.rollback()
+
+    @staticmethod
+    def insert_rreply(db, rp):
+        try:
+            stmt = insert(Reply).values(userid=rp.userid,
+                                        reply=rp.reply, bno=rp.bno, rpno=rp.rpno)
+            result = db.execute(stmt)
+
+            db.commit()
+            return result
+
+        except SQLAlchemyError as ex:
+            print(f'▶▶▶ insert_rreply 오류발생 : {str(ex)}')
             db.rollback()
