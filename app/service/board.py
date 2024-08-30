@@ -1,4 +1,4 @@
-from sqlalchemy import select, or_, update, insert, func
+from sqlalchemy import select, or_, update, insert, func, delete
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import joinedload, contains_eager
 from app.model.board import Board, Reply
@@ -112,4 +112,17 @@ class BoardService:
 
         except SQLAlchemyError as ex:
             print(f'▶▶▶ insert_rreply 오류발생 : {str(ex)}')
+            db.rollback()
+
+    @staticmethod
+    def delete_board(db, bno):
+        try:
+            stmt = delete(Board).where(Board.bno == bno)
+            result = db.execute(stmt)
+
+            db.commit()
+            return result
+
+        except SQLAlchemyError as ex:
+            print(f'▶▶▶ delete_board 오류발생 : {str(ex)}')
             db.rollback()
